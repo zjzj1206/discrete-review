@@ -67,7 +67,9 @@ $\mathbb Q(\sqrt2)/\mathbb Q$ 的 Galois 群为 $C_2$；$\mathbb Q(\sqrt2,\sqrt3
 二次多项式可约当且仅当有根。代入 0、1 均得 1，故 $f$ 不可约，商环确实是域。所有余式次数小于 2，故恰有四个元素。
 
 加法逐系数模 2，所以 $\alpha+\alpha=0$。乘法先展开再约去：
+
 $$\alpha(\alpha+1)=\alpha^2+\alpha=1,\qquad(\alpha+1)^2=\alpha^2+1=\alpha.$$
+
 因此 $\alpha^{-1}=\alpha+1$，$(\alpha+1)^{-1}=\alpha$，非零乘法群由 $\alpha$ 生成且阶为 3。注意域特征为 2，而元素数为 4；“加四次才首次得到零”是错误理解。
 :::
 

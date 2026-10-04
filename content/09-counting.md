@@ -111,7 +111,9 @@ Stirling 递推按最后元素单独成块或加入旧块分类。分拆的第 $
 令 $F(z)=\sum_{n\ge0}F_nz^n$。递推只对 $n\ge2$ 成立，所以左边为 $F(z)-z$；第一项右边为 $z(F(z)-F_0)=zF(z)$；第二项为 $z^2F(z)$。于是 $F(z)=z/(1-z-z^2)$。
 
 令 $\alpha=(1+\sqrt5)/2,\beta=(1-\sqrt5)/2$，分母为 $(1-\alpha z)(1-\beta z)$，部分分式给
+
 $$F(z)=\frac1{\sqrt5}\left(\frac1{1-\alpha z}-\frac1{1-\beta z}\right).$$
+
 利用形式等比级数逐项取系数，得到 $F_n=(\alpha^n-\beta^n)/\sqrt5$。若起初把左边错写成 $F(z)$，便会丢掉非零解所需的初值信息。
 :::
 

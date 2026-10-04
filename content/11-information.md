@@ -75,19 +75,25 @@ $I(X;Y\mid Z)=\sum_zp(z)D_2(P_{XY|z}\Vert P_{X|z}P_{Y|z})=H(X\mid Z)-H(X\mid Y,Z
 
 :::引理 对数和不等式与散度的联合凸性
 非负数 $a_i,b_i$ 满足
+
 $$\sum_i a_i\ln\frac{a_i}{b_i}\ge A\ln\frac AB,\qquad A=\sum_i a_i,\ B=\sum_i b_i.$$
+
 散度在分布对 $(P,Q)$ 上联合凸。
 |||归一化后就是 Gibbs 不等式
 当 $A,B>0$ 且支撑兼容时，左右差为 $A D_e((a_i/A)_i\Vert(b_i/B)_i)$，所以非负；零项使用连续约定，不兼容时左边无穷。
 
 对每个样本点 $x$，令 $a_i=\lambda_iP_i(x),b_i=\lambda_iQ_i(x)$，应用上式再对 $x$ 求和，得到
+
 $$D\left(\sum_i\lambda_iP_i\middle\Vert\sum_i\lambda_iQ_i\right)\le\sum_i\lambda_iD(P_i\Vert Q_i).$$
+
 若把不同样本点合并为同一输出，逐组使用对数和不等式，也直接证明确定性数据处理。这说明“丢掉区分细节”不会增加散度。
 :::
 
 :::定理 固定均值的非负整数分布由几何分布最大化熵
 若 $X\in\{0,1,\ldots\}$ 且 $E[X]=\mu>0$，则
+
 $$H(X)\le(\mu+1)\log_2(\mu+1)-\mu\log_2\mu.$$
+
 等号分布为 $q(k)=\frac1{1+\mu}(\frac\mu{1+\mu})^k$。
 |||把约束放进参考分布的对数
 $-\log_2q(k)=\log_2(1+\mu)+k\log_2((1+\mu)/\mu)$ 对 $k$ 是线性的，所以任意均值为 $\mu$ 的 $P$ 都具有相同交叉熵 $-\sum_kp(k)\log_2q(k)$。由散度非负，$H(P)$ 不超过这个交叉熵，代入均值即得右边。
@@ -99,7 +105,9 @@ $-\log_2q(k)=\log_2(1+\mu)+k\log_2((1+\mu)/\mu)$ 对 $k$ 是线性的，所以�
 对 $0<q<1$，$d_e(p\Vert q)\ge2(p-q)^2$。
 |||把常数 2 算出来
 令 $g(p)=d_e(p\Vert q)-2(p-q)^2$。有 $g(q)=g'(q)=0$，并且
+
 $$g''(p)=\frac1{p(1-p)}-4\ge0,$$
+
 因为 $p(1-p)\le1/4$。所以 $g$ 在 $p=q$ 取得全局最小值零；端点通过连续性处理。
 
 对一般分布，选 $A=\{x:P(x)\ge Q(x)\}$，则 $P(A)-Q(A)=\|P-Q\|_{\rm TV}$。将变量压缩为“是否在 A”，由数据处理和二元结论得到完整 Pinsker；换成以 2 为底的散度时要除以 $\ln2$。

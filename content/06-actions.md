@@ -73,7 +73,9 @@ $n_5\mid3$ 且 $n_5\equiv1\pmod5$，故 $n_5=1$；$n_3\mid5$ 且 $n_3\equiv1\pmo
 若 $|G|=p^am$ 且 $p\nmid m$，则 $G$ 有阶为 $p^a$ 的子群。
 |||先选轨道，再把稳定子变成所需子群
 让 $G$ 左乘作用于所有 $p^a$ 元子集的集合 $\Omega$。先证明 $p\nmid|\Omega|$：在 $\mathbb F_p[x]$ 中，
+
 $$(1+x)^{p^am}=(1+x^{p^a})^m,$$
+
 比较 $x^{p^a}$ 系数得 $\binom{p^am}{p^a}\equiv m\not\equiv0\pmod p$。
 
 轨道大小之和不被 $p$ 整除，所以存在一个大小不被 $p$ 整除的轨道，取其代表子集 $A$，令 $H=\{g:gA=A\}$。由 $[G:H]$ 不被 $p$ 整除，$p^a\mid|H|$。

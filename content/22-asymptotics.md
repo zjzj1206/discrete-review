@@ -22,13 +22,17 @@ $f\sim g$ 表示比值趋于 1，比同阶更强。记号中的等号不是对�
 $\ln(n+1)\le H_n\le1+\ln n$，且 $\ln(n!)=n\ln n-n+O(\ln n)$。
 |||单调函数的上下矩形面积
 $1/x$ 递减，所以每段积分夹在相邻高度的矩形面积之间，求和得到调和数界。$\ln x$ 递增，同理
+
 $$\int_1^n\ln x\,dx\le\sum_{j=1}^n\ln j\le\int_1^n\ln x\,dx+\ln n.$$
+
 积分为 $n\ln n-n+1$，即得结论。此估计足以得到很多熵指数，但还不能恢复 Stirling 中的 $\sqrt{2\pi n}$ 精细因子。
 :::
 
 :::定理 Stirling 公式与二项式系数的熵形式
 $n!\sim\sqrt{2\pi n}(n/e)^n$。当 $q\in(0,1)$ 固定且 $nq$ 为整数时，
+
 $$\binom n{nq}\sim\frac{e^{nh_e(q)}}{\sqrt{2\pi nq(1-q)}},\qquad h_e(q)=-q\ln q-(1-q)\ln(1-q).$$
+
 |||代入时哪些项会抵消
 把 Stirling 分别用于 $n!,(nq)!,[n(1-q)]!$。指数中的 $e^{-n}$ 与分母两项完全抵消，$n^n$ 也与分母中的 $n^{nq+n(1-q)}$ 抵消，剩下 $q^{-nq}(1-q)^{-n(1-q)}=e^{nh_e(q)}$。平方根项化为所列分母。
 

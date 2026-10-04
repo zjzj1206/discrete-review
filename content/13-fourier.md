@@ -61,7 +61,9 @@ Fourier 系数是“沿某个振荡方向的分量”。正交性保证各个方
 本章未归一化 DFT 的逆变换含 $1/n$，平方和公式也含 $1/n$。
 |||不要省略共轭与求和次序
 把正变换代入逆式：
+
 $$\frac1n\sum_k\widehat f(k)\omega^{kx}=\sum_y f(y)\left(\frac1n\sum_k\omega^{k(x-y)}\right).$$
+
 括号在 $x=y$ 时为 1，其他时候为零，因此只剩 $f(x)$。
 
 再展开 $\sum_k\widehat f(k)\overline{\widehat f(k)}$，得到 $\sum_{x,y}f(x)\overline{f(y)}\sum_k\omega^{k(y-x)}$。内和只在 $x=y$ 时保留 $n$，所以结果为 $n\sum_x|f(x)|^2$。复数情形必须使用共轭，不能用普通平方代替模平方。

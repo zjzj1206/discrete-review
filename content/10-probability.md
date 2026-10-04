@@ -81,7 +81,9 @@ Galton–Watson 过程从一个个体开始，每个个体独立产生服从同�
 令 $m(Y)=E[X\mid Y]$，则 $\operatorname{Var}(X)=E[\operatorname{Var}(X\mid Y)]+\operatorname{Var}(m(Y))$。
 |||为何交叉项恰好消失
 写 $X-E[X]=(X-m(Y))+(m(Y)-E[X])$ 后平方取期望。第一平方项是 $E[\operatorname{Var}(X\mid Y)]$，第二平方项是 $\operatorname{Var}(m(Y))$。交叉项满足
+
 $$E[(X-m(Y))(m(Y)-E[X])]=E[(m(Y)-E[X])E[X-m(Y)\mid Y]]=0.$$
+
 它不是因为两项独立，而是条件中心化。
 
 例如先公平选 $Y\in\{1,3\}$，再令 $X\mid Y\sim\operatorname{Poisson}(Y)$，则 $E[X]=2$，方差为 $E[Y]+\operatorname{Var}(Y)=2+1=3$。混合分布的方差包括组内波动与组间均值差异。
@@ -99,7 +101,9 @@ Poisson 的 PGF 为 $e^{-\lambda}\sum_k(\lambda z)^k/k!=e^{\lambda(z-1)}$，因�
 总体 $N>1$ 件中 $K$ 件为目标，抽取 $n$ 件，令 $X$ 为目标件数，$p=K/N$。则 $\operatorname{Var}(X)=np(1-p)(N-n)/(N-1)$。
 |||协方差给出有限总体修正
 令 $I_j$ 为第 $j$ 次抽到目标的指示变量。$E[I_j]=p$，但 $E[I_iI_j]=K(K-1)/(N(N-1))$，所以对不同位置有
+
 $$\operatorname{Cov}(I_i,I_j)=-\frac{p(1-p)}{N-1}.$$
+
 求和得 $np(1-p)-n(n-1)p(1-p)/(N-1)$，化简即公式。抽完全部总体时方差为零；当 $n\ll N$ 时接近二项分布方差。此处变量不独立，不能直接照抄独立和的计算。
 :::
 
