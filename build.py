@@ -3,8 +3,10 @@
 from pathlib import Path
 import re, html, shutil, json
 from math_render import make_markdown
+from build_knowledge_index import build_index
 
 ROOT=Path(__file__).resolve().parent
+build_index(ROOT)
 OUT=ROOT/'dist'
 TITLE='离散数学与结构 (I)'
 pages=[]
@@ -24,7 +26,7 @@ def markdown(s):
     return result
 
 def render(text,prefix):
-    lines=text.splitlines();chunks=[];plain=[];i=0;card=0
+    lines=text.splitlines();chunks=[];plain=[];i=0;card=0;item_links=[]
     def flush():
         if plain:chunks.append(markdown('\n'.join(plain)));plain.clear()
     while i<len(lines):
@@ -39,14 +41,18 @@ def render(text,prefix):
             if i==len(lines):raise ValueError(f'Unclosed block: {label}')
             card+=1;stats['cards']+=1
             kind,_,name=label.partition(' ')
+            item_links.append(f'<li><a href="#{prefix}-item-{card}">{card:02d} · {html.escape(label)}</a></li>')
             nested=''
             if proof_title:
                 stats['proofs']+=1
                 nested=f'<details class="proof"><summary>{html.escape(proof_title)}</summary><div class="proof-content">{markdown(chr(10).join(proof))}</div></details>'
-            chunks.append(f'<details class="card" id="{prefix}-item-{card}"><summary><span class="kind">{html.escape(kind)}</span><span>{html.escape(name)}</span></summary><div class="card-content">{markdown(chr(10).join(body))}{nested}</div></details>')
+            chunks.append(f'<details class="card" id="{prefix}-item-{card}"><summary><span class="kind">{html.escape(kind)}</span><span><span class="item-number">{prefix[:2]}.{card:02d}</span> {html.escape(name)}</span></summary><div class="card-content">{markdown(chr(10).join(body))}{nested}</div></details>')
         else:plain.append(line)
         i+=1
     flush();body='\n'.join(chunks);toc=[];number=0
+    if item_links:
+        outline='<details class="knowledge-outline"><summary>本章逐项知识清单</summary><ol>'+''.join(item_links)+'</ol></details>'
+        body=re.sub(r'(</h1>)',r'\1'+outline,body,count=1)
     def head(m):
         nonlocal number
         number+=1;a=f'{prefix}-section-{number}';toc.append((a,re.sub('<[^>]*>','',m[1])))
@@ -58,7 +64,7 @@ def render(text,prefix):
 def shell(title,body,active='',toc=(),pager=''):
     nav=''.join(f'<a href="{p["id"]}.html" '+('aria-current="page"' if p['id']==active else '')+f'>{html.escape(p["title"])}</a>' for p in pages)
     contents=''.join(f'<a href="#{a}">{html.escape(t)}</a>' for a,t in toc)
-    return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{html.escape(title)} · {TITLE if title!=TITLE else 'ZJZJ 学习空间'}</title><meta name="description" content="离散数学与结构 (I)：集合与逻辑、代数、组合、概率与信息、图论，含可折叠的知识条目、证明与往年试卷。"><link rel="stylesheet" href="katex/katex.min.css"><link rel="stylesheet" href="style.css"><link rel="icon" href="favicon.svg"></head><body><a class="skip" href="#main">跳到正文</a><header><a class="brand" href="index.html">ZJZJ <span>/ DISCRETE</span></a><div><a href="/">学习空间</a><a href="all.html">整本阅读</a><button id="menu" aria-controls="chapters" aria-expanded="false">目录</button></div></header><div class="layout"><nav id="chapters" aria-label="章节目录"><p class="nav-label">离散数学与结构 (I)</p>{nav}<p class="nav-foot">课程主线与历年拓展<br>详细讲解版 · 2026.10.04</p></nav><main id="main"><div class="eyebrow">STRUCTURES · PROOFS · CONNECTIONS</div>{body}{pager}<footer><a href="00-guide.html">资料来源与范围</a><span>先思考，再展开。</span></footer></main><aside aria-label="本页目录"><p class="nav-label">本页内容</p>{contents}<a href="#main">回到顶部 ↑</a></aside></div><script src="app.js"></script></body></html>'''
+    return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{html.escape(title)} · {TITLE if title!=TITLE else 'ZJZJ 学习空间'}</title><meta name="description" content="离散数学与结构 (I)：集合与逻辑、代数、组合、概率与信息、图论，含可折叠的知识条目、证明与往年试卷。"><link rel="stylesheet" href="katex/katex.min.css"><link rel="stylesheet" href="style.css"><link rel="icon" href="favicon.svg"></head><body><a class="skip" href="#main">跳到正文</a><header><a class="brand" href="index.html">ZJZJ <span>/ DISCRETE</span></a><div><a href="/">学习空间</a><a href="all.html">整本阅读</a><button id="menu" aria-controls="chapters" aria-expanded="false">目录</button></div></header><div class="layout"><nav id="chapters" aria-label="章节目录"><p class="nav-label">离散数学与结构 (I)</p>{nav}<p class="nav-foot">课程主线与历年拓展<br>系统学习版 · 2026.10.15</p></nav><main id="main"><div class="study-controls" aria-label="阅读展开选项"><button data-study="definitions">只展开定义</button><button data-study="content">展开条目正文</button><button data-study="proofs">展开全部证明</button><button data-study="close">全部收起</button></div><div class="eyebrow">STRUCTURES · PROOFS · CONNECTIONS</div>{body}{pager}<footer><a href="00-guide.html">资料来源与范围</a><span>先思考，再展开。</span></footer></main><aside aria-label="本页目录"><p class="nav-label">本页内容</p>{contents}<a href="#main">回到顶部 ↑</a></aside></div><script src="app.js"></script></body></html>'''
 
 if OUT.exists():shutil.rmtree(OUT)
 OUT.mkdir()
@@ -69,9 +75,11 @@ for i,p in enumerate(pages):
     for j,label in [(i-1,'上一章'),(i+1,'下一章')]:
         if 0<=j<len(pages):pager+=f'<a href="{pages[j]["id"]}.html"><small>{label}</small>{html.escape(pages[j]["title"])}</a>'
     pager+='</div>'
+    if p['id']=='24-knowledge-map':
+        body='<label class="knowledge-search">查找知识点 <input id="knowledge-search" type="search" placeholder="例如：正规子群、条件熵、量词" aria-controls="knowledge-results"></label><p id="knowledge-count" aria-live="polite"></p><div id="knowledge-results">'+body+'</div>'
     (OUT/(p['id']+'.html')).write_text(shell(p['title'],body,p['id'],toc,pager))
 cards=''.join(f'<a class="chapter" href="{p["id"]}.html"><span>{p["id"][:2]}</span><h2>{html.escape(p["title"].split(" · ")[-1])}</h2><b aria-hidden="true">↗</b></a>' for p in pages[1:])
-home=f'''<section class="intro"><p class="edition">COURSE COMPANION / 北京大学</p><h1>{TITLE}</h1><p class="lead">从证明的语言，到结构的对称，再到随机性的力量。</p><p>按章节串起学习主线，补足定义动机、例题演算与证明中间步骤。定义、定理、引理与题目默认折叠；证明和解释在条目内单独展开。</p><div class="metrics"><span><b>{topic_count}</b> 个主题章节</span><span><b>{stats['cards']}</b> 个折叠条目</span><span><b>{stats['proofs']}</b> 份证明与解释</span></div><a class="start" href="01-sets.html">开始阅读：集合与无穷 →</a></section><section class="scope"><h2>读之前，先对齐范围</h2><p>以 2025 完整课程为主线，对照 2026 已发布进度，附历年拓展。试卷保留出处；缺页扫描与归属未明的补充卷另作标记。</p><a href="00-guide.html">阅读说明与资料来源 ↗</a> · <a href="23-coverage.html">教材与笔记覆盖对照 ↗</a></section><section class="chapter-grid">{cards}</section>'''
+home=f'''<section class="intro"><p class="edition">COURSE COMPANION / 北京大学</p><h1>{TITLE}</h1><p class="lead">先把定义读懂，再沿着引理与定理建立完整体系。</p><p>每章列出前置知识，按依赖顺序讲清对象、定义、基础性质、定理与证明，并在相应位置配演算例子和反例。可以分层展开正文与证明，也可以通过知识总目录查找每个概念。</p><div class="metrics"><span><b>{topic_count}</b> 个主题章节</span><span><b>{stats['cards']}</b> 个折叠条目</span><span><b>{stats['proofs']}</b> 份证明与解释</span></div><a class="start secondary" href="24-knowledge-map.html">查阅完整知识目录 →</a> <a class="start" href="01-sets.html">开始阅读：集合与无穷 →</a></section><section class="scope"><h2>读之前，先对齐范围</h2><p>以 2025 完整课程为主线，对照 2026 已发布进度，附历年拓展。试卷保留出处；缺页扫描与归属未明的补充卷另作标记。</p><a href="00-guide.html">阅读说明与资料来源 ↗</a> · <a href="23-coverage.html">教材与笔记覆盖对照 ↗</a></section><section class="chapter-grid">{cards}</section>'''
 (OUT/'index.html').write_text(shell(TITLE,home))
 (OUT/'all.html').write_text(shell('整本阅读','<p class="scope">整本阅读保留全部折叠层级。使用章节目录可分章阅读。</p>'+''.join(all_bodies)))
 for p in (ROOT/'assets').iterdir():

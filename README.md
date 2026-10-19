@@ -11,3 +11,7 @@
 当前正文是课程知识整理；复杂元定理标注证明思路。题目索引与已完成解答分别标记。2026 后续教学范围未公布，不承诺历史范围等于本年度考试范围。
 
 部署需合并现有完整 Cloudflare Pages 站点，保留 ICS、高党及 _worker.js。禁止将单项目 dist 覆盖整站；禁止将包含高党受保护资产的完整部署包放入公开仓库。
+
+## 一键构建、检查与发布
+
+在本机运行 `python3 /home/administrator/ICS/tools/sync_site.py` 同步全部项目；只发布本项目可追加 `--project discrete`，只做本地检查可追加 `--check`。完整说明：`/home/administrator/ICS/tools/SYNC.md`。此命令发布 Cloudflare 网站，不推送 GitHub。
