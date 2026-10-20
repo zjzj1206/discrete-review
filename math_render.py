@@ -5,6 +5,16 @@ from markdown_it import MarkdownIt
 from mdit_py_plugins.dollarmath import dollarmath_plugin
 ROOT = Path(__file__).resolve().parent
 
+def render_checked(md, source):
+    """Reject broken strong-emphasis markers while allowing code and TeX."""
+    env = {}
+    tokens = md.parse(source, env)
+    for block in tokens:
+        for token in block.children or ():
+            if token.type == "text" and "**" in token.content:
+                raise ValueError(f"Unrendered bold delimiter: {token.content[:120]}")
+    return md.renderer.render(tokens, md.options, env)
+
 def make_markdown(texts):
     formulas = {}
     def render_math(tex, options):

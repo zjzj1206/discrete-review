@@ -2,7 +2,7 @@
 """Render independent course notes with native, nested disclosure elements."""
 from pathlib import Path
 import re, html, shutil, json
-from math_render import make_markdown
+from math_render import make_markdown, render_checked
 from build_knowledge_index import build_index
 
 ROOT=Path(__file__).resolve().parent
@@ -19,10 +19,10 @@ stats={'topic_chapters':topic_count,'chapters':len(pages),'cards':0,'proofs':0,'
 
 def markdown(s):
     parts=re.split(r'(?m)^@pdf (.+)$',s)
-    result=md.render(parts[0])
+    result=render_checked(md,parts[0])
     for i in range(1,len(parts),2):
         url=html.escape(parts[i],quote=True)
-        result+=f'<div class="pdf-box"><p><a href="{url}" target="_blank" rel="noopener">在新标签页打开完整原卷 ↗</a></p><iframe data-src="{url}" title="原始试卷 PDF" loading="lazy"></iframe><p class="muted">若设备不支持内嵌 PDF，请使用上方原卷链接。</p></div>'+md.render(parts[i+1])
+        result+=f'<div class="pdf-box"><p><a href="{url}" target="_blank" rel="noopener">在新标签页打开完整原卷 ↗</a></p><iframe data-src="{url}" title="原始试卷 PDF" loading="lazy"></iframe><p class="muted">若设备不支持内嵌 PDF，请使用上方原卷链接。</p></div>'+render_checked(md,parts[i+1])
     return result
 
 def render(text,prefix):
