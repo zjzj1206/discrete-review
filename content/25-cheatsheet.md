@@ -2,6 +2,10 @@
 
 **两张纸，双面共四面。** 范围从集合到计数（含），对应本站第 01–09 章。更新于 2026-10-29。
 
+## 对照复习
+
+[打开 Cheat Sheet 逐条解读与证明](38-cheatsheet-explained.html)：按四面十二栏逐项定位，保留原文，并展开定义、条件、推导与证明。
+
 ## 下载与打印
 
 - [打开或下载四面版 PDF](downloads/discrete-midterm-cheatsheet.pdf)
